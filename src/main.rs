@@ -7,7 +7,6 @@ async fn main() {
     let font = load_ttf_font("./Roboto-Regular.ttf").await;
     let mut cells = [[0_u8; 9]; 9];
     let mut editing_cell: Option<(usize, usize)> = None;
-    let mut solving_until: Option<u32> = None;
 
     let mut tick: u32 = 0;
     loop {
@@ -21,7 +20,6 @@ async fn main() {
         set_camera(cam);
         
         clear_background(WHITE);
-        let mut text = String::new();
         const CELL_SIZE: f32 = GRID_SIZE / 9.0;
         for (x, row) in cells.iter_mut().enumerate() {
             for (y, val) in row.iter_mut().enumerate() {
@@ -30,7 +28,7 @@ async fn main() {
                     continue;
                 }
 
-                text = val.to_string();
+                let text = val.to_string();
                 let (x, y) = (
                     x as f32 * CELL_SIZE,
                     y as f32 * CELL_SIZE,
@@ -79,7 +77,7 @@ async fn main() {
             editing_cell = None;
         }
 
-        if solving_until.is_none() && solve_button(mouse, font) {
+        if solve_button(mouse, font) {
             for x in 0..9 {
                 for y in 0..9 {
                     cells[x][y] = (tick % 9) as u8 + 1;
